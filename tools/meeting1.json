@@ -1,0 +1,32 @@
+{
+  "turns": [
+    {"speaker": "Alice", "text": "Good morning everyone, thanks for joining the sprint planning call. Let's start with the backend status. Bob, can you walk us through where we are with the payments API?"},
+    {"speaker": "Bob", "text": "Sure. The payments API is about eighty percent done. The Stripe integration is working, but we still need to handle refunds and webhooks. I think I can finish the refund flow by Friday."},
+    {"speaker": "Alice", "text": "Great. Refunds by Friday works for the demo. What about the webhook retries? That was a concern last week."},
+    {"speaker": "Bob", "text": "Right, I'll set up the retry queue with exponential backoff. I'll have a design doc ready by Wednesday for review."},
+    {"speaker": "Carol", "text": "On the frontend side, the checkout page is done and tested on mobile. But I'm blocked on the new design tokens from the design team. I've been waiting since Monday."},
+    {"speaker": "Alice", "text": "Okay, I'll follow up with the design team today and get those tokens to you by end of day. Carol, once you have them, how long to integrate?"},
+    {"speaker": "Carol", "text": "About two days. So if I get them today, I can finish the integration by Thursday. I'll also write the end to end tests for checkout."},
+    {"speaker": "Alice", "text": "Perfect. Now, the big decision: do we launch on the fifteenth or push to the twenty second? Bob, what's your honest take?"},
+    {"speaker": "Bob", "text": "Honestly, the fifteenth is risky. The refund flow and webhooks need proper testing. I'd recommend the twenty second so we have a full week of QA."},
+    {"speaker": "Carol", "text": "I agree with Bob. A rushed launch could hurt us. Let's go with the twenty second."},
+    {"speaker": "Alice", "text": "Alright, it's decided. We launch on the twenty second. Bob, you own the payments QA checklist. Carol, you own the frontend regression tests. I'll handle the launch announcement and the staging deploy."},
+    {"speaker": "Bob", "text": "Sounds good. One more thing, we need to decide on the monitoring tool. I've been evaluating Grafana and Datadog."},
+    {"speaker": "Alice", "text": "Let's table that for now. Bob, put together a comparison doc and we'll decide next Monday. Thanks everyone, good meeting."}
+  ],
+  "actionItems": [
+    {"owner": "Bob", "task": "finish the refund flow", "due": "Friday"},
+    {"owner": "Bob", "task": "design doc for webhook retry queue", "due": "Wednesday"},
+    {"owner": "Alice", "task": "get design tokens from design team to Carol", "due": "end of day today"},
+    {"owner": "Carol", "task": "integrate design tokens and finish checkout", "due": "Thursday"},
+    {"owner": "Carol", "task": "write end to end tests for checkout", "due": "Not stated"},
+    {"owner": "Bob", "task": "payments QA checklist", "due": "Not stated"},
+    {"owner": "Carol", "task": "frontend regression tests", "due": "Not stated"},
+    {"owner": "Alice", "task": "launch announcement and staging deploy", "due": "Not stated"},
+    {"owner": "Bob", "task": "monitoring tool comparison doc", "due": "next Monday"}
+  ],
+  "decisions": [
+    "Launch on the twenty second",
+    "Table the monitoring tool decision until next Monday"
+  ]
+}

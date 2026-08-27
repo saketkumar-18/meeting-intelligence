@@ -1,0 +1,11 @@
+node_modules/
+models/*.bz2
+models/*.onnx
+models/sherpa-onnx-*/
+eval/*.wav
+eval/*.eval.json
+eval/*.gt.json
+!eval/.gitkeep
+.vercel
+*.log
+.DS_Store

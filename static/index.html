@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting Intelligence — Diarize · Transcribe · Summarize</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span class="logo">🎙️</span>
+    <div>
+      <h1>Meeting Intelligence</h1>
+      <p class="tagline">Speaker diarization → transcription → summary, action items &amp; who-owns-what. 100% private: audio is processed in your browser.</p>
+    </div>
+  </div>
+  <div class="privacy-badge" title="Audio never leaves your device. Only the text transcript is sent for LLM analysis.">🔒 On-device ML</div>
+</header>
+
+<main>
+  <!-- ============ STAGE 0: INPUT ============ -->
+  <section id="input-section" class="card">
+    <div id="dropzone" tabindex="0">
+      <div class="dz-icon">📁</div>
+      <h2>Drop a meeting recording</h2>
+      <p>WAV / MP3 / M4A / OGG / WEBM — decoded locally, resampled to 16 kHz mono</p>
+      <button id="btn-browse" class="btn primary">Choose audio file</button>
+      <input type="file" id="file-input" accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm,.flac" hidden>
+      <div class="or">or</div>
+      <button id="btn-demo" class="btn ghost">▶ Try the built-in demo meeting</button>
+    </div>
+    <div id="model-status" class="model-status">
+      <span class="ms-item" id="ms-wasm">⏳ Engine (WASM)</span>
+      <span class="ms-item" id="ms-seg">⏳ Segmentation model</span>
+      <span class="ms-item" id="ms-emb">⏳ Speaker embedding model</span>
+      <span class="ms-item" id="ms-asr">⏳ Whisper ASR model</span>
+      <span class="ms-item" id="ms-vad">⏳ VAD model</span>
+    </div>
+    <details class="advanced">
+      <summary>Advanced options</summary>
+      <div class="opts">
+        <label>Expected speakers
+          <select id="opt-speakers">
+            <option value="-1" selected>Auto-detect</option>
+            <option value="2">2</option><option value="3">3</option>
+            <option value="4">4</option><option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </label>
+        <label>Clustering threshold
+          <input type="number" id="opt-threshold" value="0.5" min="0.2" max="0.9" step="0.05">
+        </label>
+        <label class="check"><input type="checkbox" id="opt-llm" checked> Generate AI summary &amp; action items</label>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ PIPELINE PROGRESS ============ -->
+  <section id="pipeline-section" class="card hidden">
+    <h2>Pipeline</h2>
+    <div class="stages">
+      <div class="stage" id="stage-decode"><div class="stage-dot"></div><div class="stage-label">Decode<br>&amp; resample</div><div class="stage-time"></div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage" id="stage-diar"><div class="stage-dot"></div><div class="stage-label">Speaker<br>diarization</div><div class="stage-time"></div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage" id="stage-vad"><div class="stage-dot"></div><div class="stage-label">Voice<br>activity</div><div class="stage-time"></div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage" id="stage-asr"><div class="stage-dot"></div><div class="stage-label">Whisper<br>transcription</div><div class="stage-time"></div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage" id="stage-align"><div class="stage-dot"></div><div class="stage-label">Speaker<br>alignment</div><div class="stage-time"></div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage" id="stage-llm"><div class="stage-dot"></div><div class="stage-label">AI<br>analysis</div><div class="stage-time"></div></div>
+    </div>
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+    <div id="progress-text" class="muted"></div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="results-section" class="hidden">
+    <div class="results-grid">
+      <!-- Left column: analysis -->
+      <div class="col-left">
+        <div class="card" id="summary-card">
+          <div class="card-head">
+            <h2>📋 Executive Summary</h2>
+            <span id="model-badge" class="badge"></span>
+          </div>
+          <h3 id="meeting-title"></h3>
+          <p id="meeting-summary"></p>
+          <div id="participants" class="chips"></div>
+        </div>
+
+        <div class="card" id="actions-card">
+          <div class="card-head">
+            <h2>✅ Action Items — who owns what</h2>
+            <span id="action-count" class="badge"></span>
+          </div>
+          <div id="action-items"></div>
+        </div>
+
+        <div class="card" id="decisions-card">
+          <h2>⚖️ Decisions</h2>
+          <ul id="decisions-list"></ul>
+        </div>
+
+        <div class="card" id="keypoints-card">
+          <h2>💡 Key Points</h2>
+          <ul id="keypoints-list"></ul>
+        </div>
+
+        <div class="card" id="questions-card">
+          <h2>❓ Open Questions</h2>
+          <ul id="questions-list"></ul>
+        </div>
+      </div>
+
+      <!-- Right column: transcript -->
+      <div class="col-right">
+        <div class="card">
+          <div class="card-head">
+            <h2>💬 Transcript</h2>
+            <div class="toolbar">
+              <button class="btn tiny" id="btn-copy">Copy</button>
+              <button class="btn tiny" id="btn-md">Markdown</button>
+              <button class="btn tiny" id="btn-json">JSON</button>
+              <button class="btn tiny" id="btn-srt">SRT</button>
+            </div>
+          </div>
+          <div id="speaker-legend" class="chips"></div>
+          <div id="transcript"></div>
+        </div>
+        <div class="card">
+          <h2>📊 Stats</h2>
+          <div id="stats" class="stats-grid"></div>
+        </div>
+      </div>
+    </div>
+    <div class="center">
+      <button id="btn-restart" class="btn primary">Process another meeting</button>
+    </div>
+  </section>
+
+  <section id="error-section" class="card error-card hidden">
+    <h2>⚠️ Something went wrong</h2>
+    <p id="error-text"></p>
+    <button id="btn-retry" class="btn primary">Try again</button>
+  </section>
+</main>
+
+<footer>
+  <p>Meeting Intelligence · Capstone project · Diarization (pyannote + CAM++), VAD (Silero), ASR (Whisper) run fully in-browser via WebAssembly. Only the transcript text is sent to the analysis API.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
