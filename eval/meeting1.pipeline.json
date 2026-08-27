@@ -1,0 +1,259 @@
+{
+  "audio": "meeting1.wav",
+  "durationSec": 139.746,
+  "numSpeakers": 3,
+  "timings": {
+    "diarizationMs": 137956,
+    "asrMs": 241253,
+    "totalMs": 379255
+  },
+  "utterances": [
+    {
+      "speaker": 0,
+      "start": 0.19971875846385956,
+      "end": 3.3722188472747803,
+      "text": "Good morning everyone, thanks for joining the Sprint planning call."
+    },
+    {
+      "speaker": 0,
+      "start": 4.334094047546387,
+      "end": 6.190343856811523,
+      "text": "Let's start with the back end status."
+    },
+    {
+      "speaker": 0,
+      "start": 7.118468761444092,
+      "end": 10.290968894958496,
+      "text": "Bob, can you walk us through where we are with the payments API?"
+    },
+    {
+      "speaker": 1,
+      "start": 11.826594352722168,
+      "end": 12.299094200134277,
+      "text": "Sure."
+    },
+    {
+      "speaker": 1,
+      "start": 13.227219581604004,
+      "end": 15.792219161987305,
+      "text": "The Payments API is about 80% done."
+    },
+    {
+      "speaker": 1,
+      "start": 16.737220764160156,
+      "end": 20.93909454345703,
+      "text": "The stripe integration is working, but we still need to handle refunds and webhooks. //"
+    },
+    {
+      "speaker": 1,
+      "start": 21.951595306396484,
+      "end": 24.364721298217773,
+      "text": "I think I can finish the refund flow by Friday."
+    },
+    {
+      "speaker": 0,
+      "start": 25.866596221923828,
+      "end": 26.372846603393555,
+      "text": "Great"
+    },
+    {
+      "speaker": 0,
+      "start": 27.25034523010254,
+      "end": 29.5115966796875,
+      "text": "Refunds by Friday works for the demo."
+    },
+    {
+      "speaker": 0,
+      "start": 30.439720153808594,
+      "end": 32.127220153808594,
+      "text": "What about the webhook retries?"
+    },
+    {
+      "speaker": 0,
+      "start": 33.08909225463867,
+      "end": 34.67534255981445,
+      "text": "That was a concern last week."
+    },
+    {
+      "speaker": 1,
+      "start": 36.210968017578125,
+      "end": 39.3497200012207,
+      "text": "Right, I'll set up the retry cue with exponential back off. //"
+    },
+    {
+      "speaker": 1,
+      "start": 40.379093170166016,
+      "end": 42.910343170166016,
+      "text": "I'll have a design dock ready by Wednesday for review."
+    },
+    {
+      "speaker": 2,
+      "start": 44.42909622192383,
+      "end": 48.31034469604492,
+      "text": "On the front-end side, the checkout page is done and tested on mobile."
+    },
+    {
+      "speaker": 2,
+      "start": 49.25534439086914,
+      "end": 52.15784454345703,
+      "text": "but I'm blocked on the new design tokens from the design team."
+    },
+    {
+      "speaker": 2,
+      "start": 53.15346908569336,
+      "end": 54.63846969604492,
+      "text": "I've been waiting since Monday."
+    },
+    {
+      "speaker": 0,
+      "start": 56.072845458984375,
+      "end": 60.42659378051758,
+      "text": "Okay, I'll follow up with the design team today and get those tokens to you by end of day. //"
+    },
+    {
+      "speaker": 0,
+      "start": 61.32096862792969,
+      "end": 64.0209732055664,
+      "text": "Carol, once you have them, how long to integrate."
+    },
+    {
+      "speaker": 2,
+      "start": 65.53971862792969,
+      "end": 66.67034912109375,
+      "text": "about two days."
+    },
+    {
+      "speaker": 2,
+      "start": 67.61534881591797,
+      "end": 71.22659301757812,
+      "text": "So if I get them today, I can finish the integration by Thursday."
+    },
+    {
+      "speaker": 2,
+      "start": 72.18846893310547,
+      "end": 74.82096862792969,
+      "text": "I'll also write the end to end tests for checkout."
+    },
+    {
+      "speaker": 0,
+      "start": 76.3397216796875,
+      "end": 76.93034362792969,
+      "text": "Perfect"
+    },
+    {
+      "speaker": 0,
+      "start": 77.80784606933594,
+      "end": 81.89159393310547,
+      "text": "Now, the big decision, do we launch on the 15th or push to the 22nd? //"
+    },
+    {
+      "speaker": 0,
+      "start": 82.81971740722656,
+      "end": 84.40596771240234,
+      "text": "Bob, what's your honest take?"
+    },
+    {
+      "speaker": 1,
+      "start": 85.94159698486328,
+      "end": 87.98347473144531,
+      "text": "Honestly, the 15th is risky."
+    },
+    {
+      "speaker": 1,
+      "start": 88.92847442626953,
+      "end": 91.64534759521484,
+      "text": "The refund flow and webhooks need proper testing."
+    },
+    {
+      "speaker": 1,
+      "start": 92.59034729003906,
+      "end": 95.77972412109375,
+      "text": "I'd recommend the 22nd so we have a full week of QA."
+    },
+    {
+      "speaker": 2,
+      "start": 97.26472473144531,
+      "end": 98.32785034179688,
+      "text": "I agree with Bob."
+    },
+    {
+      "speaker": 2,
+      "start": 99.23909759521484,
+      "end": 100.79159545898438,
+      "text": "A rush launch could hurt us."
+    },
+    {
+      "speaker": 2,
+      "start": 101.70285034179688,
+      "end": 103.23847198486328,
+      "text": "Let's go with the 22nd."
+    },
+    {
+      "speaker": 0,
+      "start": 104.70659637451172,
+      "end": 106.2084732055664,
+      "text": "Alright, it's decided."
+    },
+    {
+      "speaker": 0,
+      "start": 107.15347290039062,
+      "end": 108.77347564697266,
+      "text": "We launch on the 22nd."
+    },
+    {
+      "speaker": 0,
+      "start": 109.68472290039062,
+      "end": 112.04722595214844,
+      "text": "Bob, you own the payments QA checklist."
+    },
+    {
+      "speaker": 0,
+      "start": 112.99222564697266,
+      "end": 115.54034423828125,
+      "text": "Carol, you own the front end regression tests."
+    },
+    {
+      "speaker": 0,
+      "start": 116.5022201538086,
+      "end": 119.20222473144531,
+      "text": "I'll handle the launch announcement and the staging deploy."
+    },
+    {
+      "speaker": 1,
+      "start": 120.68722534179688,
+      "end": 121.3959732055664,
+      "text": "sounds good."
+    },
+    {
+      "speaker": 1,
+      "start": 122.35784912109375,
+      "end": 125.4291000366211,
+      "text": "One more thing, we need to decide on the monitoring tool."
+    },
+    {
+      "speaker": 1,
+      "start": 126.32347106933594,
+      "end": 128.51722717285156,
+      "text": "I've been evaluating Grafana and Data Dog."
+    },
+    {
+      "speaker": 0,
+      "start": 130.01910400390625,
+      "end": 131.40286254882812,
+      "text": "Let's table that for now."
+    },
+    {
+      "speaker": 0,
+      "start": 132.31410217285156,
+      "end": 135.90847778320312,
+      "text": "Bob, put together a comparison doc and we'll decide next Monday."
+    },
+    {
+      "speaker": 0,
+      "start": 136.78598022460938,
+      "end": 138.43972778320312,
+      "text": "Thanks everyone, good meeting."
+    }
+  ],
+  "analysis": null
+}

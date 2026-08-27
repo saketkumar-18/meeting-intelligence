@@ -208,8 +208,15 @@ async def analyze(request: Request):
 
     errors = []
     for i, (provider, model) in enumerate(TEXT_CHAIN):
-        mt = 2048 if "qwen3.8" in model else 1200
-        content, err = _chat(provider, model, messages, max_tokens=mt)
+        mt = 4096 if "qwen3.8" in model else 1200
+        # qwen3.8 is a reasoning model: without /no_think it burns the whole
+        # budget on reasoning tokens and returns empty content.
+        if "qwen3.8" in model:
+            msgs = [messages[0],
+                    {"role": "user", "content": messages[1]["content"] + "\n/no_think"}]
+        else:
+            msgs = messages
+        content, err = _chat(provider, model, msgs, max_tokens=mt)
         if err:
             errors.append(err)
             continue

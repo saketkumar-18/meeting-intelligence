@@ -1,0 +1,93 @@
+{
+  "analysis": {
+    "title": "Sprint Planning Call",
+    "summary": "The team reviewed sprint progress for payments and frontend. The payments API is about eighty percent complete, with Stripe working but refunds and webhooks outstanding. Frontend checkout is complete and mobile-tested, but blocked by missing design tokens. The group decided to launch on the twenty-second to allow proper QA, assigned ownership for payments QA, frontend regression, and launch tasks, and deferred the monitoring tool choice pending a comparison doc.",
+    "participants": [
+      "Speaker 1",
+      "Bob",
+      "Carol"
+    ],
+    "keyPoints": [
+      "The payments API is about eighty percent done; Stripe integration is working, but refunds and webhooks remain.",
+      "Bob expects to finish the refund flow by Friday and will prepare a webhook retry design doc by Wednesday.",
+      "Frontend checkout is done and tested on mobile, but Carol is blocked on new design tokens from the design team.",
+      "Speaker 1 will follow up with the design team to get tokens to Carol by end of day.",
+      "The team chose the twenty-second launch date to allow a full week of QA.",
+      "Monitoring tool evaluation is ongoing between Grafana and Datadog."
+    ],
+    "decisions": [
+      "Launch on the twenty second.",
+      "Table the monitoring tool decision for now and decide next Monday."
+    ],
+    "actionItems": [
+      {
+        "owner": "Bob",
+        "task": "Finish the refund flow",
+        "due": "Friday",
+        "context": "Needed for the demo and payments API completion."
+      },
+      {
+        "owner": "Bob",
+        "task": "Set up the retry queue with exponential backoff",
+        "due": "Not stated",
+        "context": "Addresses webhook retry concerns from last week."
+      },
+      {
+        "owner": "Bob",
+        "task": "Have a design doc ready for review",
+        "due": "Wednesday",
+        "context": "Design review for webhook retries."
+      },
+      {
+        "owner": "Speaker 1",
+        "task": "Follow up with the design team and get design tokens to Carol",
+        "due": "today by end of day",
+        "context": "Carol is blocked on design tokens for frontend integration."
+      },
+      {
+        "owner": "Carol",
+        "task": "Integrate the new design tokens",
+        "due": "Thursday",
+        "context": "Finish frontend integration if tokens are received today."
+      },
+      {
+        "owner": "Carol",
+        "task": "Write the end to end tests for checkout",
+        "due": "Not stated",
+        "context": "Frontend test coverage for checkout."
+      },
+      {
+        "owner": "Bob",
+        "task": "Own the payments QA checklist",
+        "due": "Not stated",
+        "context": "Ensures payments testing before launch."
+      },
+      {
+        "owner": "Carol",
+        "task": "Own the frontend regression tests",
+        "due": "Not stated",
+        "context": "Ensures frontend regression coverage before launch."
+      },
+      {
+        "owner": "Speaker 1",
+        "task": "Handle the launch announcement and the staging deploy",
+        "due": "Not stated",
+        "context": "Launch preparation responsibilities."
+      },
+      {
+        "owner": "Bob",
+        "task": "Put together a comparison doc for Grafana and Datadog",
+        "due": "Not stated",
+        "context": "Supports the monitoring tool decision next Monday."
+      }
+    ],
+    "openQuestions": [
+      "Which monitoring tool should be selected, Grafana or Datadog?"
+    ]
+  },
+  "model": "tokenrouter:qwen/qwen3.8-max-free",
+  "fallbackUsed": true,
+  "errors": [
+    "openrouter: no api key configured"
+  ]
+}

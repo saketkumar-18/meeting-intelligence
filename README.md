@@ -20,11 +20,11 @@ A production-ready meeting intelligence pipeline. Drop in a meeting recording an
 │                     ▼                                                        │
 │  ┌─────────────────────────────────────────────┐                             │
 │  │ sherpa-onnx WASM                            │                             │
-│  │  • pyannote segmentation (who speaks when)  │                             │
-│  │  • CAM++ speaker embeddings                 │                             │
+│  │  • pyannote 3.0 segmentation (int8)         │                             │
+│  │  • ERes2Net speaker embeddings (VoxCeleb)   │                             │
 │  │  • fast clustering (how many speakers)      │                             │
 │  └─────────────────────────────────────────────┘                             │
-│                     │ speaker segments                                       │
+│                     │ speaker-labeled segments (double as ASR chunks)        │
 │                     ▼                                                        │
 │  ┌─────────────────────────────────────────────┐                             │
 │  │ Whisper tiny.en (transformers.js, ONNX)     │                             │
@@ -179,13 +179,18 @@ vercel --prod
 ## Tech notes
 
 - **Diarization**: sherpa-onnx offline speaker diarization = pyannote 3.0
-  segmentation → CAM++ (VoxCeleb) embeddings → fast agglomerative clustering.
-  Threshold 0.5 default; pass expected speaker count when known.
+  segmentation (int8, `windowShiftRatio=0.25` for 2x speed) → ERes2Net
+  (VoxCeleb) embeddings → fast agglomerative clustering. ERes2Net scored
+  100% speaker attribution on the eval meeting vs 78.6% for CAM++ (similar
+  female voices were merging). Threshold 0.5 default; pass expected speaker
+  count when known.
+- **Segmentation doubles as VAD**: diarization segments are fed directly to
+  Whisper as ASR chunks (long ones split at 28s) — no separate VAD pass.
 - **Browser ASR**: Whisper tiny.en quantized ONNX via transformers.js,
   self-hosted weights (~40MB total, cached by the browser after first load).
 - **Node ASR**: Whisper base.en via sherpa-onnx for higher-quality eval.
-- **Alignment**: each ASR chunk is assigned to the diarization speaker with
-  maximum temporal overlap; consecutive same-speaker chunks are merged.
+- **Alignment**: each ASR chunk inherits its diarization speaker label;
+  consecutive same-speaker chunks are merged into turns.
 - **No GPU, no cloud ML bills**: everything runs on CPU/WASM.
 
 ## License

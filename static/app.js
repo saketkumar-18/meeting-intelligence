@@ -63,7 +63,7 @@ function loadSherpa() {
     s1.src = `${WASM_DIR}/sherpa-onnx-speaker-diarization.js`;
     s1.onload = () => {
       const s2 = document.createElement('script');
-      s2.src = `${WASM_DIR}/sherpa-onnx.js`;
+      s2.src = `${WASM_DIR}/sherpa-onnx-wasm-main-speaker-diarization.js`;
       s2.onerror = () => reject(new Error('failed to load WASM runtime'));
       document.head.appendChild(s2);
     };
