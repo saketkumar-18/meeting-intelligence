@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Node deps (sherpa-onnx for lib imports)
+        run: npm install --no-audit --no-fund
+
+      - name: JS unit tests (pipeline logic + LLM parsing)
+        run: node --test tests/unit.test.mjs
+
+      - name: Install Python deps
+        run: pip install -q fastapi==0.115.12 pydantic==2.11.4 httpx==0.28.1 pytest
+
+      - name: Python API tests (mocked LLM layer)
+        run: python -m pytest tests/test_api.py -q
+
+      - name: Static asset sanity
+        run: |
+          test -f static/index.html
+          test -f static/app.js
+          test -f static/style.css
+          test -f static/vendor/transformers.min.js
+          test -f static/wasm/sherpa-onnx-wasm-main-speaker-diarization.wasm
+          test -f static/wasm/sherpa-onnx-wasm-main-speaker-diarization.data
+          test -f static/models/Xenova/whisper-tiny.en/onnx/encoder_model_quantized.onnx
+          test -f static/models/Xenova/whisper-tiny.en/onnx/decoder_model_quantized.onnx
+          test -f static/models/Xenova/whisper-tiny.en/onnx/decoder_with_past_model_quantized.onnx
+          test -f static/demo/meeting1.wav
+          node -e "const s=require('fs').statSync('static/wasm/sherpa-onnx-wasm-main-speaker-diarization.data'); if(s.size!==28026780) throw new Error('wasm data bundle size mismatch: '+s.size)"
