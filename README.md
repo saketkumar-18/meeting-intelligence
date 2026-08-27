@@ -46,7 +46,7 @@ analysis API.
 
 ## Live demo
 
-https://meeting-intelligence-saket.vercel.app
+https://meeting-intelligence-lime.vercel.app
 
 ## Repo layout
 
