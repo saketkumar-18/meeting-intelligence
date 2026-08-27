@@ -82,9 +82,9 @@ async function loadWhisper() {
   env.useBrowserCache = true;
   // Self-hosted weights: point the hub at our own static dir.
   env.remoteHost = `${location.origin}/models/`;
-  env.remotePathTemplate = '{model_id}/';
+  env.remotePathTemplate = '{model}/';
   const asr = await pipeline('automatic-speech-recognition', WHISPER_MODEL, {
-    quantized: true,
+    dtype: 'q8',
     progress_callback: (p) => {
       if (p.status === 'progress' && p.total) {
         const pct = Math.round((p.loaded / p.total) * 100);

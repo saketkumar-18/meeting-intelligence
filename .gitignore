@@ -9,3 +9,6 @@ eval/*.gt.json
 .vercel
 *.log
 .DS_Store
+
+.vercel
+.env*
