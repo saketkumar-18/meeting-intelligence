@@ -216,7 +216,10 @@ async def analyze(request: Request):
                     {"role": "user", "content": messages[1]["content"] + "\n/no_think"}]
         else:
             msgs = messages
-        content, err = _chat(provider, model, msgs, max_tokens=mt)
+        # qwen3.8 free tier can take 30-60s. The Vercel function is capped at
+        # 60s (Hobby), so give the model 58s — a retry cannot fit in the
+        # remaining budget. The UI degrades gracefully if analysis times out.
+        content, err = _chat(provider, model, msgs, timeout=58.0, max_tokens=mt)
         if err:
             errors.append(err)
             continue
