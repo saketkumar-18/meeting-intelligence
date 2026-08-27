@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 
 import httpx
@@ -26,10 +27,52 @@ TOKENROUTER_BASE = "https://api.tokenrouter.com/v1"
 
 TEXT_CHAIN = [
     ("openrouter", "minimax/minimax-m3:free"),
+    ("tokenrouter", "minimax/minimax-m3:free"),
     ("tokenrouter", "qwen/qwen3.8-max-free"),
     ("openrouter", "nvidia/nemotron-3-super-120b-a12b:free"),
     ("openrouter", "google/gemma-4-31b-it:free"),
 ]
+
+ACTION_KEYWORDS_RE = re.compile(
+    r"\b(will|finish|complete|send|deliver|deploy|launch|review|meet|call|email|schedule|deadline|by\s+\w+day|friday|monday|wednesday|thursday|tuesday)\b",
+    re.IGNORECASE,
+)
+
+def truncate_transcript(utterances, max_chars=12000):
+    """Smart truncation: keep first 3 + last 3 + action-rich middle."""
+    if not utterances:
+        return ""
+    
+    lines = [
+        f"[{u.get('start', 0):.1f}s] Speaker {int(u.get('speaker', 0)) + 1}: {u.get('text', '')}"
+        for u in utterances
+    ]
+    full = "\n".join(lines)
+    if len(full) <= max_chars:
+        return full
+    
+    first = "\n".join(lines[:3])
+    last = "\n".join(lines[-3:])
+    fixed = first + "\n...\n" + last
+    remaining = max_chars - len(fixed) - 20
+    
+    if remaining > 200:
+        middle = lines[3:-3]
+        action_lines = [l for l in middle if ACTION_KEYWORDS_RE.search(l)]
+        other_lines = [l for l in middle if not ACTION_KEYWORDS_RE.search(l)]
+        
+        selected = ""
+        for l in action_lines:
+            if len(selected) + len(l) + 1 <= remaining:
+                selected += l + "\n"
+        for l in other_lines:
+            if len(selected) + len(l) + 1 <= remaining:
+                selected += l + "\n"
+            else:
+                break
+        return first + "\n...\n" + selected + "\n...\n" + last
+    
+    return fixed
 
 SYSTEM_PROMPT = (
     "You are a precise meeting-intelligence engine. You are given a diarized "
@@ -195,7 +238,7 @@ async def analyze(request: Request):
     if len(utterances) > 2000:
         return JSONResponse({"error": "too many utterances (max 2000)"}, status_code=400)
 
-    transcript = format_transcript(utterances)
+    transcript = truncate_transcript(utterances)
     user_msg = (
         "Diarized meeting transcript:\n\n" + transcript +
         "\n\nAnalyze this meeting and respond with ONLY valid JSON matching "
@@ -216,9 +259,6 @@ async def analyze(request: Request):
                     {"role": "user", "content": messages[1]["content"] + "\n/no_think"}]
         else:
             msgs = messages
-        # qwen3.8 free tier can take 30-60s. The Vercel function is capped at
-        # 60s (Hobby), so give the model 58s — a retry cannot fit in the
-        # remaining budget. The UI degrades gracefully if analysis times out.
         content, err = _chat(provider, model, msgs, timeout=58.0, max_tokens=mt)
         if err:
             errors.append(err)
